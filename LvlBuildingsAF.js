@@ -92,9 +92,9 @@
                 loadBuildingLevels();
             })();
         } else {
-            alert("Użyj skryptu w asystencie farmera");
+            UI.ErrorMessage("Uzyj skryptu w asystencie farmera");
         }
     } else {
-        alert("Tylko w desktopowej wersji działa");
+		UI.ErrorMessage("Tylko w desktopowej wersji dziala");
     }
 })();
