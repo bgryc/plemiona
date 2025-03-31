@@ -1,4 +1,4 @@
-(function() {
+javascript:(function() {
     if (game_data.device == "desktop") {
         if (game_data.screen == "am_farm") {
             (function LvlBuidlingsAF() {
