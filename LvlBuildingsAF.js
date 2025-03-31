@@ -1,4 +1,4 @@
-javascript:(function() {
+(function() {
     if (game_data.device == "desktop") {
         if (game_data.screen == "am_farm") {
             (function LvlBuidlingsAF() {
@@ -92,9 +92,9 @@ javascript:(function() {
                 loadBuildingLevels();
             })();
         } else {
-            UI.ErrorMessage("Uzyj skryptu w asystencie farmera");
+            alert("Użyj skryptu w asystencie farmera");
         }
     } else {
-		UI.ErrorMessage("Tylko w desktopowej wersji dziala");
+        alert("Tylko w desktopowej wersji działa");
     }
 })();
