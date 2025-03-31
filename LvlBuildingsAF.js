@@ -2,7 +2,7 @@ if (game_data.device === "desktop") {
     if (game_data.screen === "am_farm") {
         LvlBuildingsAF();
     } else {
-        UI.ErrorMessage("Użyj skryptu w zakładce Poproś o pomoc");
+        UI.ErrorMessage("Użyj skryptu w asystencie farmera");
     }
 } else {
     UI.ErrorMessage("Skryptu nie można użyć na urządzeniu mobilnym");
