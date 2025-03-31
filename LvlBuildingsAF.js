@@ -1,4 +1,3 @@
-javascript:
 if (game_data.device === "desktop") {
     if (game_data.screen === "am_farm") {
         LvlBuildingsAF();
