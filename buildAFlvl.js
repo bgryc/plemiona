@@ -1,4 +1,4 @@
-javascript: (function () {
+(function () {
     // Ensure the script is running on the correct device and screen
     if (game_data.device !== "desktop") {
         return UI.ErrorMessage("This script works only on the desktop version.");
@@ -102,4 +102,4 @@ javascript: (function () {
         // Initial load of building levels
         loadBuildingLevels();
     })();
-})();
+}();
