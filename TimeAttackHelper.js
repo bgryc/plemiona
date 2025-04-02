@@ -26,9 +26,8 @@
         // Sprawdź, czy już istnieje wiersz z czasem wyjścia
         let exitTimeRow = table.querySelector('.exit_time_row');
         if (!exitTimeRow) {
-            
-		// Dodaj nowy wiersz z czasem wyjścia
-            exitTimeRow = table.insertRow(-1);
+            // Dodaj nowy wiersz z czasem wyjścia
+            exitTimeRow = table.insertRow(2);
             exitTimeRow.className = 'exit_time_row';
             let cell1 = exitTimeRow.insertCell(0);
             let cell2 = exitTimeRow.insertCell(1);
