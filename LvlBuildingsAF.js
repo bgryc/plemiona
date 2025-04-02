@@ -9,7 +9,7 @@ if (game_data.device === "desktop") {
 }
 
 function LvlBuildingsAF() {
-    const availableBuildings = ["Ratusz", "Koszary", "Kuźnia", "Plac", "Rynek", "Tartak"];
+    const availableBuildings = ["Ratusz", "Koszary", "Stajnia", "Warsztat", "Kuźnia", "Plac", "Rynek", "Tartak", "Cegielnia", "Huta żelaza", "Zagroda", "Spichlerz", "Schowek"];
     let selectedBuilding = "Koszary"; 
 
     function refreshBuildingData() {
@@ -60,7 +60,7 @@ function LvlBuildingsAF() {
                 const doc = parser.parseFromString(text, "text/html");
 
                 const tables = ["#attack_spy_buildings_left", "#attack_spy_buildings_right"];
-                let buildingLevel = "?";
+                let buildingLevel = "-";
 
                 for (let tableId of tables) {
                     const table = doc.querySelector(tableId);
@@ -76,7 +76,7 @@ function LvlBuildingsAF() {
                             }
                         }
                     }
-                    if (buildingLevel !== "?") break;
+                    if (buildingLevel !== "-") break;
                 }
 
                 console.log(`Poziom ${selectedBuilding}: ${buildingLevel}`);
