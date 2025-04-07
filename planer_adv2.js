@@ -71,140 +71,89 @@ else
 	$("#planer_klinow").remove();
 void 0;
 
-function wypiszMozliwosci() {
-    if (pobieram) {
-        $("#ladowanie").html("Czekaj, muszę pobrać...");
-        setTimeout(wypiszMozliwosci, 500);
-        return;
-    }
-    if ($("#wyborWojsk").is(":visible")) {
-        zmienStrzalke();
-        $("#wyborWojsk").hide();
-        $("#lista_wojska").show();
-        zapiszWybrane();
-    }
-    var html = [];
-    var htmlTmp = [];
-    
-    var najwJednostka = -1;
-    var cel = document.getElementById('wspolrzedneCelu').value.match(/\d+/g);
-    var dodatkoweWioski = document.getElementById('dodatkoweWioski').value.split(';').map(function(item) {
-        return item.match(/\d+/g);
-    });
-    var godzinaWejscia = document.getElementById('godzina_wejscia').value.match(/\d+/g);
-    var dataWejscia = document.getElementById('data_wejscia').value.match(/\d+/g);
-    
-    $('#lista_wojska th').each(function (i) {
-        if (i > dane.predkosci.length) return;
-        if (i && $(this).hasClass("faded")) aktywneJednostki[i - 1] = "0";
-        else if (i) aktywneJednostki[i - 1] = "1";
-    });
-    setCookie("atkjed", (parseInt(aktywneJednostki.join(""), 2).toString(36)), 360);
-    var t = $('#serverTime').html().match(/\d+/g);
-    var d = $('#serverDate').html().match(/\d+/g);
-    var obecnyCzas = new Date(d[2], d[1] - 1, d[0], t[0], t[1], t[2]);
-    var czasWejscia = new Date(dataWejscia[2], dataWejscia[1] - 1, dataWejscia[0], godzinaWejscia[0], godzinaWejscia[1], godzinaWejscia[2]);
-    var roznicaSekund = (czasWejscia - obecnyCzas) / 1000;
-    
-    var ilosc_wiosek = 0;
-    for (i = 0; i < mojeWioski.length; i++) {
-        if (!pokazWies[i]) continue;
-        htmlTmp[i] = "<tr><td><a href=" + dane.linkDoPrzegladuWioski + id[i] + ">" + nazwyWiosek[i].replace(/\s+/g, "\u00A0") + "</a>";
-        najwolniejsza = 0;
-        mozliwewojska = "&from=simulator";
-        
-        for (j = 0; j < dane.predkosci.length; j++) {
-            if (aktywneJednostki[j] == "0" || wojska[i][j] < 1) {
-                htmlTmp[i] += "<td class='hidden'>" + wojska[i][j];
-                continue;
-            }
-            a = Math.abs(Number(cel[0]) - mojeWioski[i][mojeWioski[i].length - 3]);
-            b = Math.abs(Number(cel[1]) - mojeWioski[i][mojeWioski[i].length - 2]);
-            czasPrzejscia = Math.sqrt((a * a) + (b * b)) * dane.predkosci[j] * 60;
-            
-            if (czasPrzejscia <= roznicaSekund) {
-                if (czasPrzejscia > najwolniejsza) {
-                    najwolniejsza = czasPrzejscia;
-                    najwJednostka = j;
-                }
-                mozliwewojska += "&att_" + obrazki[j] + "=" + wojska[i][j];
-                htmlTmp[i] += "<td style='background-color: #C3FFA5;'>" + wojska[i][j];
-            } else {
-                htmlTmp[i] += "<td>" + wojska[i][j];
-            }
-        }
-        if (najwolniejsza != 0) {
-            tmp = new Date(czasWejscia);
-            tmp.setSeconds(tmp.getSeconds() - najwolniejsza);
-            czasWyjscia[ilosc_wiosek] = new Date(tmp);
-            ddd = tmp.getDate() + "." + (tmp.getMonth() + 1) + "\u00A0" + tmp.getHours() + ":" + tmp.getMinutes() + ":" + tmp.getSeconds();
-            html[ilosc_wiosek] = htmlTmp[i] + "<td>" + ddd + "<td>" + 0 + "<td><a href='" + dane.linkDorozkazu + id[i] + "&screen=place&x=" + cel[0] + "&y=" + cel[1] + mozliwewojska + "'>Wykonaj</a>";
-            tabelkaBB[ilosc_wiosek] = "[*]" + dane.nazwyWojsk[najwJednostka] + "[|] " + mojeWioski[i][mojeWioski[i].length - 3] + "|" + mojeWioski[i][mojeWioski[i].length - 2] + " [|] " + cel[0] + "|" + cel[1] + " [|] " + ddd + " [|] [url=h[...]";
-            ilosc_wiosek++;
-        } else {
-            htmlTmp[i] = "";
-        }
-    }
-    
-    // Dodaj kalkulacje dla dodatkowych wiosek
-    dodatkoweWioski.forEach(function(wioska) {
-        var htmlTmpExtra = "<tr><td>Dodatkowa wioska (" + wioska[0] + "|" + wioska[1] + ")";
-        najwolniejsza = 0;
-        mozliwewojska = "&from=simulator";
-        
-        for (j = 0; j < dane.predkosci.length; j++) {
-            a = Math.abs(Number(cel[0]) - wioska[0]);
-            b = Math.abs(Number(cel[1]) - wioska[1]);
-            czasPrzejscia = Math.sqrt((a * a) + (b * b)) * dane.predkosci[j] * 60;
-            
-            if (czasPrzejscia <= roznicaSekund) {
-                if (czasPrzejscia > najwolniejsza) {
-                    najwolniejsza = czasPrzejscia;
-                    najwJednostka = j;
-                }
-                mozliwewojska += "&att_" + obrazki[j] + "=0";  // Zakładamy 0 jednostek w dodatkowych wioskach
-                htmlTmpExtra += "<td style='background-color: #C3FFA5;'>0";
-            } else {
-                htmlTmpExtra += "<td>0";
-            }
-        }
-        if (najwolniejsza != 0) {
-            tmp = new Date(czasWejscia);
-            tmp.setSeconds(tmp.getSeconds() - najwolniejsza);
-            czasWyjscia[ilosc_wiosek] = new Date(tmp);
-            ddd = tmp.getDate() + "." + (tmp.getMonth() + 1) + "\u00A0" + tmp.getHours() + ":" + tmp.getMinutes() + ":" + tmp.getSeconds();
-            html[ilosc_wiosek] = htmlTmpExtra + "<td>" + ddd + "<td>" + 0 + "<td><a href='" + dane.linkDorozkazu + "0&screen=place&x=" + cel[0] + "&y=" + cel[1] + mozliwewojska + "'>Wykonaj</a>";
-            tabelkaBB[ilosc_wiosek] = "[*]" + dane.nazwyWojsk[najwJednostka] + "[|] " + wioska[0] + "|" + wioska[1] + " [|] " + cel[0] + "|" + cel[1] + " [|] " + ddd + " [|] [url=h[...]";
-            ilosc_wiosek++;
-        }
-    });
-    
-    if (ilosc_wiosek == 0) UI.InfoMessage('Nie zmieszczę żadnego rozkazu w podany termin :( ', 1500, 'error');
-    $("#ilosc_mozliwosci").html("<b>" + ilosc_wiosek + "/" + mojeWioski.length + "</b>");
+function wypiszMozliwosci(){
+	if(pobieram){$("#ladowanie").html("Czekaj, muszÄ pobraÄ..."); setTimeout(wypiszMozliwosci, 500); return;}
+	if($("#wyborWojsk").is(":visible")){zmienStrzalke(); $("#wyborWojsk").hide();$("#lista_wojska").show(); zapiszWybrane();}
+	var html=[];
+	var htmlTmp =[];
+	
+	var najwJednostka = -1;
+	var cel = document.getElementById('wspolrzedneCelu').value.match(/\d+/g);
+	var godzinaWejscia = document.getElementById('godzina_wejscia').value.match(/\d+/g);
+	var dataWejscia = document.getElementById('data_wejscia').value.match(/\d+/g);
+	
+	$('#lista_wojska th').each(function (i) {
+		if(i>dane.predkosci.length) return;
+		if(i && $(this).hasClass( "faded" ))	aktywneJednostki[i-1]="0";
+		else if(i) aktywneJednostki[i-1]="1";
+	});
+	setCookie("atkjed",(parseInt(aktywneJednostki.join(""),2).toString(36)),360);
+	var t = $('#serverTime').html().match(/\d+/g);
+	var d = $('#serverDate').html().match(/\d+/g);
+	var obecnyCzas = new Date(d[2],d[1]-1,d[0],t[0],t[1],t[2]);
+	var czasWejscia = new Date(dataWejscia[2], dataWejscia[1] - 1, dataWejscia[0], godzinaWejscia[0], godzinaWejscia[1], godzinaWejscia[2]);
+	var roznicaSekund=(czasWejscia-obecnyCzas)/1000;
+	
+	var ilosc_wiosek = 0;
+	for(i=0;i<mojeWioski.length;i++){
+		htmlTmp[i] = "<tr><td><a href="+dane.linkDoPrzegladuWioski+id[i]+">"+nazwyWiosek[i].replace(/\s+/g, "\u00A0");+"</a>";
+		najwolniejsza = 0;
+		mozliwewojska = "&from=simulator";
+		
+		for(j=0;j<dane.predkosci.length;j++){
+			if(wojska[i][j]<1){ 
+				htmlTmp[i] += "<td class='hidden'>"+wojska[i][j]; 
+				continue; 
+			}
+			a = Math.abs(Number(cel[0]) - mojeWioski[i][mojeWioski[i].length-3]);
+			b = Math.abs(Number(cel[1]) - mojeWioski[i][mojeWioski[i].length-2]);
+			czasPrzejscia = Math.sqrt((a * a) + (b * b)) * dane.predkosci[j]*60;
+			
+			if(czasPrzejscia<=roznicaSekund){
+				if(czasPrzejscia > najwolniejsza){ najwolniejsza = czasPrzejscia; najwJednostka = j;}
+				mozliwewojska += "&att_"+obrazki[j]+"="+wojska[i][j];
+				htmlTmp[i] += "<td style='background-color: #C3FFA5;'>"+wojska[i][j];
+			}
+			else {
+				htmlTmp[i] += "<td>"+wojska[i][j];
+			}
+		}
+		if(najwolniejsza != 0){
+			tmp = new Date(czasWejscia);
+			tmp.setSeconds(tmp.getSeconds() - najwolniejsza);	
+			czasWyjscia[ilosc_wiosek]=new Date(tmp);
+			ddd = tmp.getDate() + "." + (tmp.getMonth()+1) + "\u00A0" + tmp.getHours() + ":" + tmp.getMinutes() + ":" + tmp.getSeconds();
+			html[ilosc_wiosek]=htmlTmp[i]+"<td>"+ddd+"<td>"+0+"<td><a href='"+dane.linkDorozkazu+id[i]+"&screen=place&x="+cel[0]+"&y="+cel[1]+mozliwewojska+"'>Wykonaj</a>";
+			tabelkaBB[ilosc_wiosek]="[*]"+dane.nazwyWojsk[najwJednostka]+"[|] "+mojeWioski[i][mojeWioski[i].length-3]+"|"+mojeWioski[i][mojeWioski[i].length-2]+" [|] "+cel[0]+"|"+cel[1]+" [|] "+ddd+" [|] [url=h[...]";
+			ilosc_wiosek++;
+		}
+	}
+	if(ilosc_wiosek==0) UI.InfoMessage('Nie zmieszczÄ Ĺźadnego rozkazu w podany termin :( ', 1500, 'error');
+	$("#ilosc_mozliwosci").html("<b>"+ilosc_wiosek+"/"+mojeWioski.length+"</b>");
 
-    for (i = 0; i < html.length - 1; i++) {
-        min = i;
-        for (j = i + 1; j < html.length; j++)
-            if (czasWyjscia[min] > czasWyjscia[j])
-                min = j;
+	for(i=0;i<html.length-1;i++){
+		min = i;
+		for(j=i+1;j<html.length;j++)
+			if(czasWyjscia[min]>czasWyjscia[j])
+				min = j;
 
-        tmp = html[min];
-        html[min] = html[i];
-        html[i] = tmp;
-        tmp = czasWyjscia[min];
-        czasWyjscia[min] = czasWyjscia[i];
-        czasWyjscia[i] = tmp;
-        tmp = tabelkaBB[min];
-        tabelkaBB[min] = tabelkaBB[i];
-        tabelkaBB[i] = tmp;
-    }
-    tabelkaBB.splice(ilosc_wiosek, tabelkaBB.length - ilosc_wiosek);
-    $('#lista_wojska tbody').html(html.join("\n") + (ilosc_wiosek ? "<tr><td id='export_bb' colspan=" + (dane.predkosci.length + 4) + "><a href='#' onclick=\"$('#export_bb').html('<textarea cols=100 rows=2 onclick[...]" : ""));
-    $('#lista_wojska tbody tr').each(function (i) {
-        $(this).addClass(i % 2 ? "row_a" : "row_b");
-    });
-    $("#ladowanie").html("");
-    odliczaj();
+		tmp = html[min];
+		html[min] = html[i];
+		html[i] = tmp;
+		tmp = czasWyjscia[min];
+		czasWyjscia[min] = czasWyjscia[i];
+		czasWyjscia[i] = tmp;
+		tmp = tabelkaBB[min];
+		tabelkaBB[min] = tabelkaBB[i];		
+		tabelkaBB[i] = tmp;
+	}
+	tabelkaBB.splice(ilosc_wiosek,tabelkaBB.length-ilosc_wiosek);
+	$('#lista_wojska tbody').html(html.join("\n")+(ilosc_wiosek?"<tr><td id='export_bb' colspan="+(dane.predkosci.length+4)+"><a href='#' onclick=\"$('#export_bb').html('<textarea cols=100 rows=2 onclick[...]
+	$('#lista_wojska tbody tr').each(function(i){
+		$(this).addClass(i%2?"row_a":"row_b");
+	});
+	$("#ladowanie").html("");
+	odliczaj();
 }
 
 function odliczaj(){
