@@ -160,8 +160,10 @@ function wypiszMozliwosci(){
         tabelkaBB[i] = tmp;
     }
     tabelkaBB.splice(ilosc_wiosek,tabelkaBB.length-ilosc_wiosek);
-    $('#lista_wojska tbody').html(html.join("\n")+(ilosc_wiosek?"<tr><td id='export_bb' colspan="+(dane.predkosci.length+4)+"><a href='#' onclick=\"$('#export_bb').html('<textarea cols=100 rows=2 onclick[...]\");
-    $('#lista_wojska tbody tr').each(function(i){
+    // $('#lista_wojska tbody').html(html.join("\n")+(ilosc_wiosek?"<tr><td id='export_bb' colspan="+(dane.predkosci.length+4)+"><a href='#' onclick=\"$('#export_bb').html('<textarea cols=100 rows=2 onclick[...]\");
+	$('#lista_wojska tbody').html(html.join("\n") + (ilosc_wiosek ? "<tr><td id='export_bb' colspan=" + (dane.predkosci.length + 4) + "><a href='#' onclick=\"$('#export_bb').html('<textarea cols=100 rows=2 onclick=\\'this.select()\\'>"+tabelkaBB.join('\\n')+"</textarea>');\">Eksportuj BB-kod</a></td></tr>" : ""));    
+
+$('#lista_wojska tbody tr').each(function(i){
         $(this).addClass(i%2?"row_a":"row_b");
     });
     $("#ladowanie").html("");
