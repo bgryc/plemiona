@@ -206,33 +206,6 @@ function wypiszMozliwosci() {
     $("#ladowanie").html("");
     odliczaj();
 }
-	if(ilosc_wiosek==0) UI.InfoMessage('Nie zmieszczÄ Ĺźadnego rozkazu w podany termin :( ', 1500, 'error');
-	$("#ilosc_mozliwosci").html("<b>"+ilosc_wiosek+"/"+mojeWioski.length+"</b>");
-
-	for(i=0;i<html.length-1;i++){
-		min = i;
-		for(j=i+1;j<html.length;j++)
-			if(czasWyjscia[min]>czasWyjscia[j])
-				min = j;
-
-		tmp = html[min];
-		html[min] = html[i];
-		html[i] = tmp;
-		tmp = czasWyjscia[min];
-		czasWyjscia[min] = czasWyjscia[i];
-		czasWyjscia[i] = tmp;
-		tmp = tabelkaBB[min];
-		tabelkaBB[min] = tabelkaBB[i];		
-		tabelkaBB[i] = tmp;
-	}
-	tabelkaBB.splice(ilosc_wiosek,tabelkaBB.length-ilosc_wiosek);
-	$('#lista_wojska tbody').html(html.join("\n")+(ilosc_wiosek?"<tr><td id='export_bb' colspan="+(dane.predkosci.length+4)+"><a href='#' onclick=\"$('#export_bb').html('<textarea cols=100 rows=2 onclick=\\'this.select()\\'>[table][**]Jednostka[||]ĹšrĂłdĹo[||]Cel[||]Czas wyjĹcia[||]Rozkaz[/**]\\n'+tabelkaBB.join('')+'[/table]</textarea>');\" ><img src='"+image_base+"igm/export.png' > Eksportuj rozpiskÄ</a>":''));
-	$('#lista_wojska tbody tr').each(function(i){
-		$(this).addClass(i%2?"row_a":"row_b");
-	});
-	$("#ladowanie").html("");
-	odliczaj();
-}
 
 function odliczaj(){
 	var t = $('#serverTime').html().match(/\d+/g);
@@ -368,8 +341,8 @@ function wybieranieWiosek(){
 	pokazOdleglosc();
 }
 function pokazOdleglosc(){
-	document.getElementById('elu').value = document.getElementById('elu').value.match(/\d+\|\d+/);
-	var cel = document.getElementById('elu').value.match(/\d+/g);
+	document.getElementById('wspolrzedneCelu').value = document.getElementById('wspolrzedneCelu').value.match(/\d+\|\d+/);
+	var cel = document.getElementById('wspolrzedneCelu').value.match(/\d+/g);
 	$("#wyborWojsk tr:has(td) td:nth-child("+(dane.predkosci.length+2)+")").each(function(i){
 		a = Math.abs(Number(cel[0]) - mojeWioski[i][mojeWioski[i].length-3]);
 		b = Math.abs(Number(cel[1]) - mojeWioski[i][mojeWioski[i].length-2]);
@@ -417,7 +390,8 @@ function rysujPlaner(){
 				return;
 			}
 		});
-		elem += "<tr><td colspan=2 width='100%'><table style=\"display: none; border-spacing: 3px; border-collapse: separate;\" id='wyborWojsk' width='100%'></table><table style=\"border-spacing: 3px; border-collapse: separate;\" id='lista_wojska' width='100%'><thead><tr><th id='ilosc_mozliwosci'><span class='icon header village' ></span>";
+	var elem = "<div class='vis vis_item' style='overflow: auto; height: 300px;' id='planer_klinow'><table width='100%'><tr><td width='300'><table style=\"border-spacing: 3px; border-collapse: separate;\"><tr><th>Cel<th>Dodatkowe wioski<th>Data<th>Godzina<th>Grupa<th><th><tr><td><input size=8 type='text' onchange='pokazOdleglosc();' value='" + cel + "' id='wspolrzedneCelu' /><td><input size=20 type='text' placeholder='x|y;x|y' id='dodatkoweWioski' /><td><input size=8 type='text' value='" + obecnyCzas.getDate() + "." + (obecnyCzas.getMonth() + 1) + "." + obecnyCzas.getFullYear() + "' onchange=\"poprawDate(this,'.');\" id='data_wejscia'/><td><input size=8 type='text' value='" + obecnyCzas.getHours() + ":" + obecnyCzas.getMinutes() + ":" + obecnyCzas.getSeconds() + "' onchange=\"poprawDate(this,':');\" id='godzina_wejscia'/><td><select id='listGrup' onchange=\"zmienGrupe();\"><option value='" + wszystkieWojska + "'>Wszystkie</select><td onclick=\"zmienStrzalke(); if($('#wyborWojsk').is(':visible')){ $('#wyborWojsk').hide();$('#lista_wojska').show(); zapiszWybrane(); return;} else{ $('#lista_wojska').hide(); $('#wyborWojsk').show();} \" style=\"cursor:pointer;\"><span id='strzaleczka' class='icon header arr_down' ></span><td><input type='button' class='btn' value='Oblicz' onclick=\"wypiszMozliwosci();\" id='przycisk'></table><td id='ladowanie'><img src='" + image_base + "throbber.gif' />";
+	elem += "<tr><td colspan=2 width='100%'><table style=\"display: none; border-spacing: 3px; border-collapse: separate;\" id='wyborWojsk' width='100%'></table><table style=\"border-spacing: 3px; border-collapse: separate;\" id='lista_wojska' width='100%'><thead><tr><th id='ilosc_mozliwosci'><span class='icon header village' ></span>";
 
 	for(i=0;i<obrazki.length;i++)
 		elem += "<th style=\"cursor:pointer;\" class='"+(aktywneJednostki[i]=="0"?"faded":"")+"' onClick=\"if(this.className == 'faded') this.className=''; else this.className='faded';\"><img title='"+dane.nazwyWojsk[i]+"' src='"+img_wojsk+"unit_"+obrazki[i]+".png'>";
