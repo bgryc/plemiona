@@ -72,102 +72,95 @@ else
 void 0;
 
 function wypiszMozliwosci(){
-    if(pobieram){$("#ladowanie").html("Czekaj, muszę pobrać..."); setTimeout(wypiszMozliwosci, 500); return;}
-    if($("#wyborWojsk").is(":visible")){zmienStrzalke(); $("#wyborWojsk").hide();$("#lista_wojska").show(); zapiszWybrane();}
-    var html=[];
-    var htmlTmp =[];
-    
-    var najwJednostka = -1;
-    var cel = document.getElementById('wspolrzedneCelu').value.match(/\d+/g);
-    var wspolrzedneWpisane = document.getElementById('wspolrzedne_wpisane').value.match(/\d+/g); // Nowa linia
-    if (wspolrzedneWpisane) {
-        cel = wspolrzedneWpisane; // Nowa linia
-    }
-    var godzinaWejscia = document.getElementById('godzina_wejscia').value.match(/\d+/g);
-    var dataWejscia = document.getElementById('data_wejscia').value.match(/\d+/g);
-    
-    $('#lista_wojska th').each(function (i) {
-        if(i>dane.predkosci.length) return;
-        if(i && $(this).hasClass( "faded" )) aktywneJednostki[i-1]="0";
-        else if(i) aktywneJednostki[i-1]="1";
-    });
-    setCookie("atkjed",(parseInt(aktywneJednostki.join(""),2).toString(36)),360);
-    var t = $('#serverTime').html().match(/\d+/g);
-    var d = $('#serverDate').html().match(/\d+/g);
-    var obecnyCzas = new Date(d[2],d[1]-1,d[0],t[0],t[1],t[2]);
-    var czasWejscia = new Date(dataWejscia[2], dataWejscia[1] - 1, dataWejscia[0], godzinaWejscia[0], godzinaWejscia[1], godzinaWejscia[2]);
-    var roznicaSekund=(czasWejscia-obecnyCzas)/1000;
-    
-    var ilosc_wiosek = 0;
-    for(i=0;i<mojeWioski.length;i++){
-        if(!pokazWies[i]) continue;
-        htmlTmp[i] = "<tr><td><a href="+dane.linkDoPrzegladuWioski+id[i]+">"+nazwyWiosek[i].replace(/\s+/g, "\u00A0");+"</a>";
-        najwolniejsza = 0;
-        mozliwewojska = "&from=simulator";
-        
-        for(j=0;j<dane.predkosci.length;j++){
-            if(aktywneJednostki[j]=="0" || wojska[i][j]<1){ 
-                
-                htmlTmp[i] += "<td class='hidden'>"+wojska[i][j]; 
-                continue; 
-            }
-            a = Math.abs(Number(cel[0]) - mojeWioski[i][mojeWioski[i].length-3]);
-            b = Math.abs(Number(cel[1]) - mojeWioski[i][mojeWioski[i].length-2]);
-            czasPrzejscia = Math.sqrt((a * a) + (b * b)) * dane.predkosci[j]*60;
-            
-            if(czasPrzejscia<=roznicaSekund){
-                if(czasPrzejscia > najwolniejsza){ 
-                    najwolniejsza = czasPrzejscia; 
-                    najwJednostka = j;
-                }
-                mozliwewojska += "&att_"+obrazki[j]+"="+wojska[i][j];
-                htmlTmp[i] += "<td style='background-color: #C3FFA5;'>"+wojska[i][j];
-            }
-            else {
-                htmlTmp[i] += "<td>"+wojska[i][j];
-            }
-        }
-        if(najwolniejsza != 0){
-            tmp = new Date(czasWejscia);
-            tmp.setSeconds(tmp.getSeconds() - najwolniejsza);    
-            czasWyjscia[ilosc_wiosek]=new Date(tmp);
-            ddd = tmp.getDate() + "." + (tmp.getMonth()+1) + "\u00A0" + tmp.getHours() + ":" + tmp.getMinutes() + ":" + tmp.getSeconds();
-            html[ilosc_wiosek]=htmlTmp[i]+"<td>"+ddd+"<td>"+0+"<td><a href='"+dane.linkDorozkazu+id[i]+"&screen=place&x="+cel[0]+"&y="+cel[1]+mozliwewojska+"'>Wykonaj</a>";
-        tabelkaBB[ilosc_wiosek]="[*]"+dane.nazwyWojsk[najwJednostka]+"[|] "+mojeWioski[i][mojeWioski[i].length-3]+"|"+mojeWioski[i][mojeWioski[i].length-2]+" [|] "+cel[0]+"|"+cel[1]+" [|] "+ddd+" [|] [url=h[...]";
-            ilosc_wiosek++;
-        }
-        else{
-            htmlTmp[i]  = "";
-        }
-    }
-    if(ilosc_wiosek==0) UI.InfoMessage('Nie zmieszczę żadnego rozkazu w podany termin :( ', 1500, 'error');
-    $("#ilosc_mozliwosci").html("<b>"+ilosc_wiosek+"/"+mojeWioski.length+"</b>");
+	if(pobieram){$("#ladowanie").html("Czekaj, muszÄ pobraÄ..."); setTimeout(wypiszMozliwosci, 500); return;}
+	if($("#wyborWojsk").is(":visible")){zmienStrzalke(); $("#wyborWojsk").hide();$("#lista_wojska").show(); zapiszWybrane();}
+	var html=[];
+	var htmlTmp =[];
+	
+	var najwJednostka = -1;
+	var cel = document.getElementById('wspolrzedneCelu').value.match(/\d+/g);
+	var godzinaWejscia = document.getElementById('godzina_wejscia').value.match(/\d+/g);
+	var dataWejscia = document.getElementById('data_wejscia').value.match(/\d+/g);
+	
+	$('#lista_wojska th').each(function (i) {
+		if(i>dane.predkosci.length) return;
+		if(i && $(this).hasClass( "faded" ))	aktywneJednostki[i-1]="0";
+		else if(i) aktywneJednostki[i-1]="1";
+	});
+	setCookie("atkjed",(parseInt(aktywneJednostki.join(""),2).toString(36)),360);
+	var t = $('#serverTime').html().match(/\d+/g);
+	var d = $('#serverDate').html().match(/\d+/g);
+	var obecnyCzas = new Date(d[2],d[1]-1,d[0],t[0],t[1],t[2]);
+	var czasWejscia = new Date(dataWejscia[2], dataWejscia[1] - 1, dataWejscia[0], godzinaWejscia[0], godzinaWejscia[1], godzinaWejscia[2]);
+	var roznicaSekund=(czasWejscia-obecnyCzas)/1000;
+	
+	var ilosc_wiosek = 0;
+	for(i=0;i<mojeWioski.length;i++){
+		if(!pokazWies[i]) continue;
+		htmlTmp[i] = "<tr><td><a href="+dane.linkDoPrzegladuWioski+id[i]+">"+nazwyWiosek[i].replace(/\s+/g, "\u00A0");+"</a>";
+		najwolniejsza = 0;
+		mozliwewojska = "&from=simulator";
+		
+		for(j=0;j<dane.predkosci.length;j++){
+			if(aktywneJednostki[j]=="0" || wojska[i][j]<1){ 
+				
+				htmlTmp[i] += "<td class='hidden'>"+wojska[i][j]; 
+				//mozliwewojska += "&att_"+obrazki[j]+"="+0;
+				continue; 
+			}
+			a = Math.abs(Number(cel[0]) - mojeWioski[i][mojeWioski[i].length-3]);
+			b = Math.abs(Number(cel[1]) - mojeWioski[i][mojeWioski[i].length-2]);
+			czasPrzejscia = Math.sqrt((a * a) + (b * b)) * dane.predkosci[j]*60;
+			
+			if(czasPrzejscia<=roznicaSekund){
+				if(czasPrzejscia > najwolniejsza){ najwolniejsza = czasPrzejscia; najwJednostka = j;}
+				mozliwewojska += "&att_"+obrazki[j]+"="+wojska[i][j];
+				htmlTmp[i] += "<td style='background-color: #C3FFA5;'>"+wojska[i][j];
+			}
+			else {
+				//mozliwewojska += "&att_"+obrazki[j]+"="+0;
+				htmlTmp[i] += "<td>"+wojska[i][j];
+			}
+		}
+		if(najwolniejsza != 0){
+			tmp = new Date(czasWejscia);
+			tmp.setSeconds(tmp.getSeconds() - najwolniejsza);	
+			czasWyjscia[ilosc_wiosek]=new Date(tmp);
+			ddd = tmp.getDate() + "." + (tmp.getMonth()+1) + "\u00A0" + tmp.getHours() + ":" + tmp.getMinutes() + ":" + tmp.getSeconds();
+			html[ilosc_wiosek]=htmlTmp[i]+"<td>"+ddd+"<td>"+0+"<td><a href='"+dane.linkDorozkazu+id[i]+"&screen=place&x="+cel[0]+"&y="+cel[1]+mozliwewojska+"'>Wykonaj</a>";
+		tabelkaBB[ilosc_wiosek]="[*]"+dane.nazwyWojsk[najwJednostka]+"[|] "+mojeWioski[i][mojeWioski[i].length-3]+"|"+mojeWioski[i][mojeWioski[i].length-2]+" [|] "+cel[0]+"|"+cel[1]+" [|] "+ddd+" [|] [url=https://"+document.URL.split("/")[2]+dane.linkDorozkazu+id[i]+"&screen=place&x="+cel[0]+"&y="+cel[1]+mozliwewojska+"]Wykonaj\n";
+			ilosc_wiosek++;
+		}
+		else{
+			htmlTmp[i]  = "";
+		}
+	}
+	if(ilosc_wiosek==0) UI.InfoMessage('Nie zmieszczÄ Ĺźadnego rozkazu w podany termin :( ', 1500, 'error');
+	$("#ilosc_mozliwosci").html("<b>"+ilosc_wiosek+"/"+mojeWioski.length+"</b>");
 
-    for(i=0;i<html.length-1;i++){
-        min = i;
-        for(j=i+1;j<html.length;j++)
-            if(czasWyjscia[min]>czasWyjscia[j])
-                min = j;
+	for(i=0;i<html.length-1;i++){
+		min = i;
+		for(j=i+1;j<html.length;j++)
+			if(czasWyjscia[min]>czasWyjscia[j])
+				min = j;
 
-        tmp = html[min];
-        html[min] = html[i];
-        html[i] = tmp;
-        tmp = czasWyjscia[min];
-        czasWyjscia[min] = czasWyjscia[i];
-        czasWyjscia[i] = tmp;
-        tmp = tabelkaBB[min];
-        tabelkaBB[min] = tabelkaBB[i];        
-        tabelkaBB[i] = tmp;
-    }
-    tabelkaBB.splice(ilosc_wiosek,tabelkaBB.length-ilosc_wiosek);
-    // $('#lista_wojska tbody').html(html.join("\n")+(ilosc_wiosek?"<tr><td id='export_bb' colspan="+(dane.predkosci.length+4)+"><a href='#' onclick=\"$('#export_bb').html('<textarea cols=100 rows=2 onclick[...]\");
-	$('#lista_wojska tbody').html(html.join("\n") + (ilosc_wiosek ? "<tr><td id='export_bb' colspan=" + (dane.predkosci.length + 4) + "><a href='#' onclick=\"$('#export_bb').html('<textarea cols=100 rows=2 onclick=\\'this.select()\\'>"+tabelkaBB.join('\\n')+"</textarea>');\">Eksportuj BB-kod</a></td></tr>" : ""));    
-
-$('#lista_wojska tbody tr').each(function(i){
-        $(this).addClass(i%2?"row_a":"row_b");
-    });
-    $("#ladowanie").html("");
-    odliczaj();
+		tmp = html[min];
+		html[min] = html[i];
+		html[i] = tmp;
+		tmp = czasWyjscia[min];
+		czasWyjscia[min] = czasWyjscia[i];
+		czasWyjscia[i] = tmp;
+		tmp = tabelkaBB[min];
+		tabelkaBB[min] = tabelkaBB[i];		
+		tabelkaBB[i] = tmp;
+	}
+	tabelkaBB.splice(ilosc_wiosek,tabelkaBB.length-ilosc_wiosek);
+	$('#lista_wojska tbody').html(html.join("\n")+(ilosc_wiosek?"<tr><td id='export_bb' colspan="+(dane.predkosci.length+4)+"><a href='#' onclick=\"$('#export_bb').html('<textarea cols=100 rows=2 onclick=\\'this.select()\\'>[table][**]Jednostka[||]ĹšrĂłdĹo[||]Cel[||]Czas wyjĹcia[||]Rozkaz[/**]\\n'+tabelkaBB.join('')+'[/table]</textarea>');\" ><img src='"+image_base+"igm/export.png' > Eksportuj rozpiskÄ</a>":''));
+	$('#lista_wojska tbody tr').each(function(i){
+		$(this).addClass(i%2?"row_a":"row_b");
+	});
+	$("#ladowanie").html("");
+	odliczaj();
 }
 
 function odliczaj(){
@@ -304,13 +297,13 @@ function wybieranieWiosek(){
 	pokazOdleglosc();
 }
 function pokazOdleglosc(){
-    var wspolrzedneWpisane = document.getElementById('wspolrzedne_wpisane').value.match(/\d+/g); // Nowa linia
-    var cel = wspolrzedneWpisane ? wspolrzedneWpisane : document.getElementById('wspolrzedneCelu').value.match(/\d+/g); // Nowa linia
-    $("#wyborWojsk tr:has(td) td:nth-child("+(dane.predkosci.length+2)+")").each(function(i){
-        a = Math.abs(Number(cel[0]) - mojeWioski[i][mojeWioski[i].length-3]);
-        b = Math.abs(Number(cel[1]) - mojeWioski[i][mojeWioski[i].length-2]);
-        $(this).html(Number((Math.sqrt((a * a) + (b * b))).toFixed(1)));
-    });
+	document.getElementById('wspolrzedneCelu').value = document.getElementById('wspolrzedneCelu').value.match(/\d+\|\d+/);
+	var cel = document.getElementById('wspolrzedneCelu').value.match(/\d+/g);
+	$("#wyborWojsk tr:has(td) td:nth-child("+(dane.predkosci.length+2)+")").each(function(i){
+		a = Math.abs(Number(cel[0]) - mojeWioski[i][mojeWioski[i].length-3]);
+		b = Math.abs(Number(cel[1]) - mojeWioski[i][mojeWioski[i].length-2]);
+		$(this).html(Number((Math.sqrt((a * a) + (b * b))).toFixed(1)));
+	});
 }
 function zapiszWybrane(){
 	$('#wyborWojsk input:checkbox').each(function (i) {
@@ -331,36 +324,36 @@ function zmienStrzalke(){
 	}; 
 } 
 function rysujPlaner(){
-    var cel = game_data.village.x + "|" + game_data.village.y;
-    if(game_data.screen=="info_village"){
-        if(!mobile){
-            var tabela=document.getElementById("content_value").getElementsByClassName('vis')[0];
-            tabela.getElementsByTagName("table")[0];
-            cel = tabela.rows[2].cells[1].textContent;
-        }
-        else{
-            tabela=document.getElementsByClassName('mobileKeyValue')[0].getElementsByTagName("div")[0]; 
-            cel = tabela.textContent.match(/\d+\|\d+/);
-        }
-    }
-    var pobralemCzas = false;
-    if($(".no_ignored_command").length)
-        $(".no_ignored_command").each(function(i){
-            if(x = $(this).html().match("snob.png") && !pobralemCzas){ 
-                czas_wejscia_grubego = $(this).find("td:eq(2)").text().match(/\d+/g);
-                obecnyCzas.setSeconds(obecnyCzas.getSeconds()+Number(czas_wejscia_grubego[2])+(60*Number(czas_wejscia_grubego[1]))+(3600*Number(czas_wejscia_grubego[0])));
-                pobralemCzas = true;
-                return;
-            }
-        });
-    var elem = "<div class='vis vis_item' style='overflow: auto; height: 300px;' id='planer_klinow'><table width='100%'><tr><td width='300'><table style=\"border-spacing: 3px; border-collapse: separate;\"><tr><td colspan=2><input type='text' id='wspolrzedne_wpisane' placeholder='Wprowadź koordynaty (x|y)'></td></tr>"; // Nowa linia
-    elem += "<tr><td colspan=2 width='100%'><table style=\"display: none; border-spacing: 3px; border-collapse: separate;\" id='wyborWojsk' width='100%'></table><table style=\"border-spacing: 3px; border-collapse: separate;\" id='lista_wojska' width='100%'><thead><tr>";
-    
-    for(i=0;i<obrazki.length;i++)
-        elem += "<th style=\"cursor:pointer;\" class='"+(aktywneJednostki[i]=="0"?"faded":"")+"' onClick=\"if(this.className == 'faded') this.className=''; else this.className='faded';\"><img title='"+dane.nazwyWojsk[i]+"' src='"+img_wojsk+"unit_"+obrazki[i]+".png'></th>";
-    elem += "<th>Czas\u00A0wyjścia<th><span class=\'icon header time\'><th><b>Rozkaz</b></thead>";
-    elem += "<tbody></table></table></div>";
-    $(mobile?"#mobileContent":"#contentContainer").prepend(elem);
+	var cel = game_data.village.x + "|" + game_data.village.y;
+	if(game_data.screen=="info_village"){
+		if(!mobile){
+			var tabela=document.getElementById("content_value").getElementsByClassName('vis')[0];
+			tabela.getElementsByTagName("table")[0];
+			cel = tabela.rows[2].cells[1].textContent;
+		}
+		else{
+			tabela=document.getElementsByClassName('mobileKeyValue')[0].getElementsByTagName("div")[0]; 
+			cel = tabela.textContent.match(/\d+\|\d+/);
+		}
+	}
+	var pobralemCzas = false;
+	if($(".no_ignored_command").length)
+		$(".no_ignored_command").each(function(i){
+			if(x = $(this).html().match("snob.png") && !pobralemCzas){ 
+				czas_wejscia_grubego = $(this).find("td:eq(2)").text().match(/\d+/g);
+				obecnyCzas.setSeconds(obecnyCzas.getSeconds()+Number(czas_wejscia_grubego[2])+(60*Number(czas_wejscia_grubego[1]))+(3600*Number(czas_wejscia_grubego[0])));
+				pobralemCzas = true;
+				return;
+			}
+		});
+	var elem = "<div class='vis vis_item' style='overflow: auto; height: 300px;' id='planer_klinow'><table width='100%'><tr><td width='300'><table style=\"border-spacing: 3px; border-collapse: separate;\"><tr><th>Cel<th>Data<th>Godzina<th>Grupa<th><th><tr><td><input size=8 type='text' onchange='pokazOdleglosc();' value='" + cel +"' id='wspolrzedneCelu' /><td><input size=8 type='text' value='" + obecnyCzas.getDate()+"."+(obecnyCzas.getMonth()+1)+"."+obecnyCzas.getFullYear() + "' onchange=\"poprawDate(this,'.');\" id='data_wejscia'/><td><input size=8 type='text' value='" + obecnyCzas.getHours()+":"+obecnyCzas.getMinutes()+":"+obecnyCzas.getSeconds() + "' onchange=\"poprawDate(this,':');\" id='godzina_wejscia'/><td><select id='listGrup' onchange=\"zmienGrupe();\"><option value='"+wszystkieWojska+"'>Wszystkie</select><td onclick=\"zmienStrzalke(); if($('#wyborWojsk').is(':visible')){ $('#wyborWojsk').hide();$('#lista_wojska').show(); zapiszWybrane(); return;}	else{ $('#lista_wojska').hide(); $('#wyborWojsk').show();} \" style=\"cursor:pointer;\"><span id='strzaleczka' class='icon header arr_down' ></span><td><input type='button' class='btn' value='Oblicz' onclick=\"wypiszMozliwosci();\" id='przycisk'></table><td id='ladowanie'><img src='"+image_base+"throbber.gif' />";
+	elem += "<tr><td colspan=2 width='100%'><table style=\"display: none; border-spacing: 3px; border-collapse: separate;\" id='wyborWojsk' width='100%'></table><table style=\"border-spacing: 3px; border-collapse: separate;\" id='lista_wojska' width='100%'><thead><tr><th id='ilosc_mozliwosci'><span class='icon header village' ></span>";
+
+	for(i=0;i<obrazki.length;i++)
+		elem += "<th style=\"cursor:pointer;\" class='"+(aktywneJednostki[i]=="0"?"faded":"")+"' onClick=\"if(this.className == 'faded') this.className=''; else this.className='faded';\"><img title='"+dane.nazwyWojsk[i]+"' src='"+img_wojsk+"unit_"+obrazki[i]+".png'>";
+	elem += "<th>Czas\u00A0wyjĹcia<th><span class=\'icon header time\'><th><b>Rozkaz</b></thead>";
+	elem += "<tbody></table></table></div>";
+	$(mobile?"#mobileContent":"#contentContainer").prepend(elem);
 }
 function poprawDate(elem,sep){
 	x = elem.value.match(/\d+/g);
