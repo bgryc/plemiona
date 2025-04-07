@@ -72,17 +72,8 @@ else
 void 0;
 
 function wypiszMozliwosci(){
-    if(pobieram){
-        $("#ladowanie").html("Czekaj, muszę pobrać..."); 
-        setTimeout(wypiszMozliwosci, 500); 
-        return;
-    }
-    if($("#wyborWojsk").is(":visible")){
-        zmienStrzalke(); 
-        $("#wyborWojsk").hide();
-        $("#lista_wojska").show(); 
-        zapiszWybrane();
-    }
+    if(pobieram){$("#ladowanie").html("Czekaj, muszę pobrać..."); setTimeout(wypiszMozliwosci, 500); return;}
+    if($("#wyborWojsk").is(":visible")){zmienStrzalke(); $("#wyborWojsk").hide();$("#lista_wojska").show(); zapiszWybrane();}
     var html=[];
     var htmlTmp =[];
     
